@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 380">
+  <rect width="300" height="380" fill="#eee6f6"/>
+  <rect width="300" height="70" fill="#5a2d82"/>
+  <text x="150" y="30" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="800" fill="#fff" text-anchor="middle">BREAST CANCER SCREENING</text>
+  <text x="150" y="52" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#fff" text-anchor="middle">Frequently Asked Questions</text>
+  <g fill="none" stroke="#5a2d82" stroke-width="4">
+    <circle cx="150" cy="180" r="55"/>
+  </g>
+  <text x="150" y="188" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="800" fill="#5a2d82" text-anchor="middle">?</text>
+  <text x="150" y="300" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#5a2d82" text-anchor="middle">Cameroon Cancer Foundation</text>
+  <text x="150" y="320" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#7a6a86" text-anchor="middle">English · flyer preview</text>
+</svg>

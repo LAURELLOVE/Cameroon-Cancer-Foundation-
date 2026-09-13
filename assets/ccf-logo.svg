@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5a2d82"/>
+      <stop offset="1" stop-color="#b12578"/>
+    </linearGradient>
+  </defs>
+  <circle cx="60" cy="60" r="58" fill="url(#g)"/>
+  <circle cx="60" cy="60" r="58" fill="none" stroke="#f08b2c" stroke-width="4"/>
+  <text x="60" y="70" font-family="Arial, Helvetica, sans-serif" font-size="38" font-weight="800" fill="#fff" text-anchor="middle">CCF</text>
+</svg>
