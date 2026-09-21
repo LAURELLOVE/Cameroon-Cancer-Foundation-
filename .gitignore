@@ -3,3 +3,9 @@ node_modules/
 Thumbs.db
 dist/
 ccf-website-upload.zip
+
+# Live data and private settings - never commit these
+website/data/*
+!website/data/.htaccess
+!website/data/index.html
+website/api/config.local.php

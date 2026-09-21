@@ -27,6 +27,9 @@ if (Test-Path $dist) { Remove-Item $dist -Recurse -Force }
 New-Item -ItemType Directory -Path $dist | Out-Null
 Get-ChildItem $site -Force | Copy-Item -Destination $dist -Recurse
 
+# Never ship local test data: a stale local database/secret would overwrite the live ones.
+Get-ChildItem (Join-Path $dist 'data') -Force | Where-Object { $_.Name -notin @('.htaccess', 'index.html') } | Remove-Item -Recurse -Force
+
 $pages = Get-ChildItem $dist -File -Filter *.html | Where-Object { $_.Name -ne '404.html' } | Sort-Object Name
 $urls = foreach ($p in $pages) {
   $loc = if ($p.Name -eq 'index.html') { "$Domain/" } else { "$Domain/$($p.Name)" }

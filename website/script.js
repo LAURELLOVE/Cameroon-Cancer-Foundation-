@@ -14,6 +14,7 @@
     });
 
     try { localStorage.setItem(STORAGE_KEY, lang); } catch (e) {}
+    document.dispatchEvent(new CustomEvent('ccf-lang', { detail: lang }));
   }
 
   var initialLang = 'en';
