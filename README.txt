@@ -23,7 +23,28 @@ WHAT VISITORS CAN SUBMIT (all saved to the database, emailed to you, bilingual)
   send donors your verified bank / mobile-money details yourself.
 
 =====================================================================
-CONNECTING TO NETWORK SOLUTIONS - STEP BY STEP
+EASIEST PATH (no FTP, no commands) - recommended for beginners
+=====================================================================
+ 1. Network Solutions > Hosting > Manage > "Assign/Edit Your Domain": note which
+    folder camcancerfoundation.org is assigned to (under /htdocs). This is your
+    upload folder. NEVER upload into a folder that belongs to another domain.
+ 2. Hosting control panel > Database Manager (MySQL) > Add Database: create a NEW
+    database (do not reuse an older one). Write down the database name, user and
+    password.
+ 3. On your computer, double-click  1-configure-site.bat  and answer the questions
+    (press Enter for the database host "localhost"; type the database details and
+    choose an admin password).
+ 4. Double-click  2-build-upload-file.bat . It creates  ccf-website-upload.zip
+    (about 23 MB) in this folder. Keep it private - it contains your database
+    password.
+ 5. Network Solutions > Hosting control panel > File Manager: open the upload
+    folder from step 1, click Upload, choose ccf-website-upload.zip (limit is
+    100 MB per file). Then use "Archive Gateway" (Hosting control panel) to unzip
+    it into that same folder. Delete the zip from the server afterwards.
+ 6. Continue with section D below to check it works.
+
+=====================================================================
+CONNECTING TO NETWORK SOLUTIONS - DETAILED / FTP ALTERNATIVE
 =====================================================================
 Network Solutions' Unix hosting supports PHP, MySQL and .htaccess. Everything below
 is done by you, because it needs your account passwords.
