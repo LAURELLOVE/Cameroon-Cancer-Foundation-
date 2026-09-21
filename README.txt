@@ -145,3 +145,22 @@ NOTES
     submissions per visitor per hour (rate_limit_per_hour in config).
   - Configuration sources: Network Solutions help articles on FTP/SFTP, MySQL
     Database Manager, PHP Manager and .htaccess support.
+
+=====================================================================
+LESSONS FROM THE REAL NETWORK SOLUTIONS DEPLOYMENT (camcancerfoundation.org)
+=====================================================================
+  - Account layout: one hosting package (main domain camoncenter.org). This site lives in
+    the folder  /camcancerfoundation  and the domain is pointed to it under
+    Hosting > WEBSITES & POINTERS > Pointers & Subdomains (type: Subdirectory).
+    The older WordPress folder (wp_site_...) was left untouched.
+  - The MySQL host is NOT localhost: use the "Server Name" shown on the database's Manage
+    page (here mobitpaul40370.ipagemysql.com). Database names/users must be lowercase
+    letters/numbers/underscores, 2-16 characters, and unique platform-wide.
+  - Archive Gateway (Hosting tab > Hosting Tools > Launch) unzips uploaded files. Set both
+    the file and the Output Directory to the site folder, never to the top-level root.
+  - DELETE ccf-website-upload.zip from the server right after unzipping: it contains the
+    database password. .htaccess also blocks *.zip and README.txt as a safety net.
+  - .htaccess has no ErrorDocument line on purpose: /404.html resolves against the wrong root
+    on this setup and produced a 500 error. A rewrite rule returns a plain 404 instead.
+  - Network Solutions announced that PHP older than 8.4 will stop being supported. The site
+    only needs PHP 7.3+, but re-test all forms after any PHP upgrade for this domain.

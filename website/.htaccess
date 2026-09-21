@@ -2,7 +2,27 @@
 # (Ignored harmlessly if your plan runs on IIS/Windows instead of Apache.)
 
 AddDefaultCharset UTF-8
-ErrorDocument 404 /404.html
+# No ErrorDocument here: on Network Solutions the domain is mapped through a subfolder, and
+# "ErrorDocument 404 /404.html" resolves against the wrong root and returns a 500 error.
+# Answer missing pages with a plain 404 here, so rewrite rules of a parent folder (e.g. another
+# WordPress site on the same hosting account) never see them and turn them into a 500 error.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ - [R=404,L]
+</IfModule>
+
+# Never serve archives or the project README to visitors (they can contain private settings).
+<FilesMatch "(\.zip|\.tar|\.gz|^README\.txt)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
 
 <IfModule mod_mime.c>
   AddType audio/mpeg .mp3
