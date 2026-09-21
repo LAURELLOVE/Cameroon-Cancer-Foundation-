@@ -5,6 +5,32 @@ define('CCF_ROOT', dirname(__DIR__));
 define('CCF_DATA', CCF_ROOT . '/data');
 date_default_timezone_set('UTC');
 
+// Fallbacks for hosts that do not have the mbstring extension.
+if (!function_exists('mb_check_encoding')) {
+    function mb_check_encoding($s, $enc = null)
+    {
+        return preg_match('//u', (string) $s) === 1;
+    }
+}
+if (!function_exists('mb_strlen')) {
+    function mb_strlen($s, $enc = null)
+    {
+        return (int) preg_match_all('/./us', (string) $s);
+    }
+}
+if (!function_exists('mb_substr')) {
+    function mb_substr($s, $start, $len = null, $enc = null)
+    {
+        return implode('', array_slice(preg_split('//u', (string) $s, -1, PREG_SPLIT_NO_EMPTY), $start, $len));
+    }
+}
+if (!function_exists('mb_encode_mimeheader')) {
+    function mb_encode_mimeheader($s, $charset = 'UTF-8')
+    {
+        return '=?UTF-8?B?' . base64_encode((string) $s) . '?=';
+    }
+}
+
 function ccf_config()
 {
     static $cfg = null;
