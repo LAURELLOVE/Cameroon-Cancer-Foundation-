@@ -32,3 +32,12 @@ ErrorDocument 404 /404.html
   Header set X-Frame-Options "SAMEORIGIN"
   Header set Referrer-Policy "strict-origin-when-cross-origin"
 </IfModule>
+
+# --- Force HTTPS ---
+# Once an SSL certificate is active on your domain, remove the leading "#"
+# from the 5 lines below. Do NOT enable it before https://yourdomain works.
+#<IfModule mod_rewrite.c>
+#  RewriteEngine On
+#  RewriteCond %{HTTPS} !=on
+#  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+#</IfModule>

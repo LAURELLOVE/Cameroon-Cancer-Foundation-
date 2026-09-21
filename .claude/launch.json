@@ -4,14 +4,8 @@
     {
       "name": "ccf-site",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["--yes", "serve", "-l", "5173", "."],
+      "runtimeArgs": ["--yes", "serve", "-l", "5173", "website"],
       "port": 5173
-    },
-    {
-      "name": "ccf-dist",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["--yes", "serve", "-l", "5174", "dist"],
-      "port": 5174
     }
   ]
 }

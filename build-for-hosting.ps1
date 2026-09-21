@@ -1,13 +1,14 @@
 <#
-  Builds an upload-ready copy of the site for Network Solutions (or any web host).
+  OPTIONAL. The "website" folder is already ready to copy and paste to your host.
+  Use this script only if you want to (a) switch the site to a different domain
+  (rewrites sitemap.xml and robots.txt) and/or (b) turn on the HTTPS redirect, and
+  get a zip of the result.
 
-  Usage (PowerShell, from this folder):
-    .\build-for-hosting.ps1
     .\build-for-hosting.ps1 -Domain https://www.yourdomain.org
     .\build-for-hosting.ps1 -Domain https://www.yourdomain.org -ForceHttps
 
-  Output:
-    dist\                      folder to upload with FTP / File Manager
+  Output (the "website" folder itself is never modified):
+    dist\                      upload-ready copy with your settings applied
     ccf-website-upload.zip     the same files zipped (files at the zip root)
 #>
 param(
@@ -17,18 +18,14 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $root = $PSScriptRoot
+$site = Join-Path $root 'website'
 $dist = Join-Path $root 'dist'
 $Domain = $Domain.TrimEnd('/')
+$utf8 = New-Object System.Text.UTF8Encoding($false)
 
 if (Test-Path $dist) { Remove-Item $dist -Recurse -Force }
 New-Item -ItemType Directory -Path $dist | Out-Null
-
-Get-ChildItem $root -File -Force | Where-Object {
-  $_.Extension -eq '.html' -or $_.Name -in @('style.css', 'script.js', '.htaccess', 'robots.txt')
-} | Copy-Item -Destination $dist
-
-Copy-Item (Join-Path $root 'assets') -Destination $dist -Recurse
-Copy-Item (Join-Path $root 'downloads') -Destination $dist -Recurse
+Get-ChildItem $site -Force | Copy-Item -Destination $dist -Recurse
 
 $pages = Get-ChildItem $dist -File -Filter *.html | Where-Object { $_.Name -ne '404.html' } | Sort-Object Name
 $urls = foreach ($p in $pages) {
@@ -36,20 +33,16 @@ $urls = foreach ($p in $pages) {
   "  <url><loc>$loc</loc></url>"
 }
 $sitemap = @('<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">') + $urls + '</urlset>'
-[System.IO.File]::WriteAllLines((Join-Path $dist 'sitemap.xml'), $sitemap, (New-Object System.Text.UTF8Encoding($false)))
-Add-Content -Path (Join-Path $dist 'robots.txt') -Value "Sitemap: $Domain/sitemap.xml"
+[System.IO.File]::WriteAllLines((Join-Path $dist 'sitemap.xml'), $sitemap, $utf8)
+
+$robotsPath = Join-Path $dist 'robots.txt'
+$robots = [System.IO.File]::ReadAllText($robotsPath) -replace '(?m)^Sitemap:.*$', "Sitemap: $Domain/sitemap.xml"
+[System.IO.File]::WriteAllText($robotsPath, $robots, $utf8)
 
 if ($ForceHttps) {
-  $redirect = @'
-
-# Force HTTPS (only enabled because the site was built with -ForceHttps)
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteCond %{HTTPS} !=on
-  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-</IfModule>
-'@
-  Add-Content -Path (Join-Path $dist '.htaccess') -Value $redirect
+  $htPath = Join-Path $dist '.htaccess'
+  $ht = [System.IO.File]::ReadAllText($htPath) -replace '(?m)^#(?=<IfModule mod_rewrite\.c>|  Rewrite|</IfModule>)', ''
+  [System.IO.File]::WriteAllText($htPath, $ht, $utf8)
 }
 
 Add-Type -AssemblyName System.IO.Compression, System.IO.Compression.FileSystem
@@ -63,8 +56,8 @@ try {
   }
 } finally { $zip.Dispose() }
 
-$count = (Get-ChildItem $dist -Recurse -File -Force).Count
-$mb = [math]::Round((Get-ChildItem $dist -Recurse -File -Force | Measure-Object Length -Sum).Sum / 1MB, 1)
-Write-Host "Built $count files ($mb MB) for $Domain$(if ($ForceHttps) { ' with HTTPS redirect' })"
+$files = Get-ChildItem $dist -Recurse -File -Force
+$mb = [math]::Round(($files | Measure-Object Length -Sum).Sum / 1MB, 1)
+Write-Host "Built $($files.Count) files ($mb MB) for $Domain$(if ($ForceHttps) { ' with HTTPS redirect' })"
 Write-Host "  Folder: $dist"
 Write-Host "  Zip:    $zipPath"
