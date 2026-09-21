@@ -104,5 +104,5 @@ $db    'notify_email' => $(Q $NotifyEmail),
 
 Write-Host ''
 Write-Host "Saved $cfgPath"
-Write-Host 'Next: .\build-for-hosting.ps1   then upload the contents of dist\ (see README.txt).'
+Write-Host 'Next: double-click 2-build-upload-file.bat (or run .\build-for-hosting.ps1).'
 Write-Host 'Keep dist\ and ccf-website-upload.zip private: they now contain your database password.'
